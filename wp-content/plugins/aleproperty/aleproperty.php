@@ -21,6 +21,31 @@ if (!defined('ABSPATH')) {
 
 class aleproperty
 {
+    public  function register()
+    {
+        add_action('init', [$this, 'custom_post_type']);
+    }
+
+    public function custom_post_type()
+    {
+        register_post_type('property', [
+            'public' => true,
+            'has_archive' => true,
+            'rewrite' => ['slug' => 'properties '],
+            'label' => 'Property',
+            'supports' => ['title', 'editor', 'thumbnail']
+        ]);
+
+        register_post_type('agent', [
+            'public' => true,
+            'has_archive' => true,
+            'rewrite' => ['slug' => 'agents '],
+            'label' => 'Agents',
+            'supports' => ['title', 'editor', 'thumbnail'],
+            'show_in_rest' => true
+        ]);
+    }
+
     public static function activation()
     {
         flush_rewrite_rules();
@@ -33,6 +58,7 @@ class aleproperty
 
 if (class_exists('aleproperty')) {
     $aleproperty = new aleproperty();
+    $aleproperty->register();
 }
 
 register_activation_hook('__FILE__', [$aleproperty, 'activation']);
